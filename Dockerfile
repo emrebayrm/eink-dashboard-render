@@ -17,6 +17,7 @@ RUN apt-get update \
       libxcb-xinerama0 \
       libegl1-mesa      \
       libgles2-mesa     \
+      libfontconfig1    \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
