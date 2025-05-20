@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM --platform=linux/arm64 python:3.9-slim-buster
+FROM --platform=linux/arm64 python:3.11-slim-bullseye
 
 # Unbuffered stdout/stderr, headless Qt
 ENV PYTHONUNBUFFERED=1 \
