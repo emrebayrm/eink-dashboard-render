@@ -15,6 +15,8 @@ RUN apt-get update \
       libxcb-render-util0 \
       libxcb-icccm4 \
       libxcb-xinerama0 \
+      libegl1-mesa      \
+      libgles2-mesa     \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
