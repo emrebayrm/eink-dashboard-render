@@ -45,7 +45,8 @@ class HomeStatusProvider:
         Connect to the broker and start the network loop in the background.
         """
         if not self._running:
-            self.client.connect(self.broker, self.port, keepalive=60)
+            self.client.username_pw_set(username=USERNAME, password=PASSWORD)
+            self.client.connect(BROKER, PORT, keepalive=60)
             self.client.loop_start()
             self._running = True
             print("MQTT client loop started.")
@@ -62,4 +63,4 @@ class HomeStatusProvider:
 
     def get_status(self):
         # TODO: replace with actual home status data
-        return "LivingRoom: {self._temp}°C, {self._humidity}%"
+        return f"LivingRoom: {self._temp}°C, {self._humidity}%"

@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QWidget, QLabel, QTextEdit, QCalendarWidget, QAppl
 from PySide6.QtGui import QFont, QPainter, QPixmap, QPen, QTextCharFormat, QPolygon
 from PySide6.QtCore import Qt, QDateTime, QDate
 from PySide6.QtCharts import QChart, QChartView, QSplineSeries, QValueAxis, QDateTimeAxis
-import sys
+import sys, time
 
 # Data Providers
 from providers.weather_provider import WeatherProvider
@@ -16,9 +16,10 @@ class EInkCalendar(QCalendarWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_calendar_style()
+        self.event_list = []
 
     def set_events(self, events):
-        self.event_list = [ QDate.fromPyDate(e.date()) for e in events]
+        self.event_list = [ QDate(e.year, e.month, e.day ) for e in events]
 
     def setup_calendar_style(self):
         self.setGridVisible(False)
@@ -47,19 +48,14 @@ class EInkCalendar(QCalendarWidget):
         elif date in self.event_list:
             painter.save()
 
-            # build a triangle polygon covering the top‐left half
-            tri = QPolygon([
-                rect.topLeft(),
-                rect.bottomLeft(),
-                rect.topRight(),
-            ])
-
-            painter.setBrush(Qt.black)
-            painter.setPen(Qt.NoPen)
-            painter.drawPolygon(tri)
-
+            # draw a filled black ellipse covering the entire cell
+            painter.setPen(QPen(Qt.black, 2))
+            painter.setBrush(Qt.NoBrush)
+            y = rect.bottom() - 4
+            painter.drawLine(rect.left()+4, y, rect.right()-4, y)
+            
             # then draw the day-number on top
-            painter.setPen(Qt.white)
+            painter.setPen(Qt.black)
             painter.setFont(self.font())
             painter.drawText(rect, Qt.AlignCenter, str(date.day()))
 
@@ -83,6 +79,12 @@ class EInkDashboard(QWidget):
         self.event_list_provider = EventsProvider()
         self.notes_provider = NotesProvider(self.event_list_provider)
 
+        self.weather_provider.start()
+        self.home_status_provider.start()
+
+        # give some time to receieve weather homeassistant 
+        time.sleep(2)
+        
         # Build UI
         self.init_weather_ui()
         self.init_clock_ui()
@@ -92,9 +94,6 @@ class EInkDashboard(QWidget):
         self.init_notes_ui()
         self.init_sysinfo_ui()
 
-        self.weather_provider.start()
-        self.home_status_provider.start()
-
     def init_weather_ui(self):
         icon = self.weather_provider.get_weather_icon()
         temp = self.weather_provider.get_current_temperature()
@@ -102,7 +101,7 @@ class EInkDashboard(QWidget):
         self.weather_icon = QLabel(icon, self)
         font = QFont(); font.setPointSize(150); font.setBold(True)
         self.weather_icon.setFont(font)
-        self.weather_icon.setGeometry(35, 1, 160, 160)
+        self.weather_icon.setGeometry(25, 1, 160, 160)
         info_text = f"{temp}  |  ↑  {sunrise}  |  ↓  {sunset}"
         self.sun_info = QLabel(info_text, self)
         info_font = QFont(); info_font.setPointSize(18); info_font.setBold(True)
@@ -115,12 +114,12 @@ class EInkDashboard(QWidget):
         clock_font = QFont(); clock_font.setPointSize(130); clock_font.setBold(True)
         self.clock_label.setFont(clock_font)
         self.clock_label.setAlignment(Qt.AlignCenter)
-        self.clock_label.setGeometry(170, 1, 400, 160)
+        self.clock_label.setGeometry(200, 1, 350, 160)
         self.date_label = QLabel(QDateTime.currentDateTime().toString("dddd dd/MM"), self)
         date_font = QFont(); date_font.setPointSize(28); date_font.setBold(True)
         self.date_label.setFont(date_font)
         self.date_label.setAlignment(Qt.AlignCenter)
-        self.date_label.setGeometry(220, 130, 300, 45)
+        self.date_label.setGeometry(250, 135, 200, 40)
 
     def init_status_ui(self):
         status_text = self.home_status_provider.get_status()
@@ -128,7 +127,7 @@ class EInkDashboard(QWidget):
         status_font = QFont(); status_font.setPointSize(15); status_font.setBold(True)
         self.home_status.setFont(status_font)
         self.home_status.setAlignment(Qt.AlignCenter)
-        self.home_status.setGeometry(225, 176, 300, 15)
+        self.home_status.setGeometry(280, 176, 200, 15)
 
     def init_chart_ui(self):
         chart = QChart(); chart.legend().hide()
@@ -153,28 +152,33 @@ class EInkDashboard(QWidget):
         low_series.attachAxis(axisX); low_series.attachAxis(axisY)
         chart_view = QChartView(chart, self)
         chart_view.setRenderHint(QPainter.Antialiasing, False)
-        chart_view.setGeometry(-20, 190, 500, 285)
+        chart_view.setGeometry(-20, 195, 500, 285)
 
     def init_calendar_ui(self):
         self.calendar = EInkCalendar(self)
         self.calendar.setGeometry(450, 205, 350, 280)
+        events = self.event_list_provider.get_events()
+        only_event_dates = EventsProvider.extract_all_dates(events)
+        self.calendar.set_events(only_event_dates)
 
     def init_notes_ui(self):
         notes_text = self.notes_provider.get_notes_markdown()
         self.notes = QTextEdit(self)
+        notes_font = QFont(); notes_font.setPointSize(16)
+        self.notes.setFont(notes_font)
         self.notes.setReadOnly(True)
         self.notes.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.notes.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.notes.setFrameShape(QFrame.NoFrame)
         self.notes.setMarkdown(notes_text)
-        self.notes.setGeometry(560, 5, 240, 190)
+        self.notes.setGeometry(550, 5, 240, 190)
 
     def init_sysinfo_ui(self):
         info = self.system_info_provider.get_info()
         self.sysinfo_label = QLabel(info, self)
-        sysinfo_font = QFont(); sysinfo_font.setPointSize(15)
+        sysinfo_font = QFont(); sysinfo_font.setPointSize(12)
         self.sysinfo_label.setFont(sysinfo_font)
-        self.sysinfo_label.setGeometry(10, 450, 400, 20)
+        self.sysinfo_label.setGeometry(10, 460, 400, 20)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -100,7 +100,7 @@ class WeatherProvider:
         Connect to the broker and start the network loop in the background.
         """
         if not self._running:
-            self.client.connect(self.broker, self.port, keepalive=60)
+            self.client.connect(BROKER, PORT, keepalive=60)
             self.client.loop_start()
             self._running = True
             print("MQTT client loop started.")
@@ -120,7 +120,7 @@ class WeatherProvider:
         return self._weather_code
     def get_current_temperature(self):
         # TODO: replace with actual temperature
-        return self._current_weather
+        return str(self._current_weather) + "°C"
     def get_sun_times(self):
         # TODO: replace with actual sunrise/sunset times
         return ("6:00", "18:00")

@@ -5,4 +5,4 @@ class SystemInfoProvider:
     def get_info(self):
         # TODO: integrate with network status retrieval
         hostname = socket.gethostname()
-        return socket.gethostbyname(hostname) + ", LastUpdated: " + datetime.now()
+        return socket.gethostbyname(hostname) + ", LastUpdated: " + str(datetime.now())
