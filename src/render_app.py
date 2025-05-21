@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QWidget, QLabel, QTextEdit, QCalendarWidget, QAppl
 from PySide6.QtGui import QFont, QPainter, QPixmap, QPen, QTextCharFormat, QPolygon
 from PySide6.QtCore import Qt, QDateTime, QDate
 from PySide6.QtCharts import QChart, QChartView, QSplineSeries, QValueAxis, QDateTimeAxis
-import sys, time
+import sys, time, os
 
 # Data Providers
 from providers.weather_provider import WeatherProvider
@@ -11,6 +11,10 @@ from providers.events_provider import EventsProvider
 from providers.home_status_provider import HomeStatusProvider
 from providers.notes_provider import NotesProvider
 from providers.system_info_provider import SystemInfoProvider
+
+os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "0"    # restores Qt5 behavior :contentReference[oaicite:0]{index=0}
+os.environ["QT_SCALE_FACTOR"] = "1"              # global scale factor = 1 (no scaling) :contentReference[oaicite:1]{index=1}
+os.environ["QT_FONT_DPI"] = "96"                 # pretend every screen is 96 DPI :contentReference[oaicite:2]{index=2}
 
 class EInkCalendar(QCalendarWidget):
     def __init__(self, parent=None):
@@ -28,13 +32,13 @@ class EInkCalendar(QCalendarWidget):
         self.setLocale(self.locale())
         self.setStyleSheet("background-color: white; color: black;")
         font = QFont()
-        font.setPointSize(15)
+        font.setPointSize(12)
         font.setBold(True)
         self.setFont(font)
         header_fmt = QTextCharFormat()
         header_font = QFont()
         header_font.setBold(True)
-        header_font.setPointSize(18)
+        header_font.setPointSize(13)
         header_fmt.setFont(header_font)
         self.setHeaderTextFormat(header_fmt)
 
@@ -99,41 +103,41 @@ class EInkDashboard(QWidget):
         temp = self.weather_provider.get_current_temperature()
         sunrise, sunset = self.weather_provider.get_sun_times()
         self.weather_icon = QLabel(icon, self)
-        font = QFont(); font.setPointSize(150); font.setBold(True)
+        font = QFont(); font.setPointSize(130); font.setBold(True)
         self.weather_icon.setFont(font)
-        self.weather_icon.setGeometry(25, 1, 160, 160)
+        self.weather_icon.setGeometry(5, 1, 175, 160)
         info_text = f"{temp}  |  ↑  {sunrise}  |  ↓  {sunset}"
         self.sun_info = QLabel(info_text, self)
-        info_font = QFont(); info_font.setPointSize(18); info_font.setBold(True)
+        info_font = QFont(); info_font.setPointSize(14); info_font.setBold(True)
         self.sun_info.setFont(info_font)
         self.sun_info.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.sun_info.setGeometry(10, 170, 300, 20)
 
     def init_clock_ui(self):
         self.clock_label = QLabel(QDateTime.currentDateTime().toString("HH:mm"), self)
-        clock_font = QFont(); clock_font.setPointSize(130); clock_font.setBold(True)
+        clock_font = QFont(); clock_font.setPointSize(100); clock_font.setBold(True)
         self.clock_label.setFont(clock_font)
-        self.clock_label.setAlignment(Qt.AlignCenter)
-        self.clock_label.setGeometry(200, 1, 350, 160)
+        self.clock_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.clock_label.setGeometry(190, 1, 350, 160)
         self.date_label = QLabel(QDateTime.currentDateTime().toString("dddd dd/MM"), self)
-        date_font = QFont(); date_font.setPointSize(24); date_font.setBold(True)
+        date_font = QFont(); date_font.setPointSize(18); date_font.setBold(True)
         self.date_label.setFont(date_font)
         self.date_label.setAlignment(Qt.AlignCenter)
-        self.date_label.setGeometry(250, 135, 200, 40)
+        self.date_label.setGeometry(250, 135, 220, 30)
 
     def init_status_ui(self):
         status_text = self.home_status_provider.get_status()
         self.home_status = QLabel(status_text, self)
-        status_font = QFont(); status_font.setPointSize(15); status_font.setBold(True)
+        status_font = QFont(); status_font.setPointSize(13); status_font.setBold(True)
         self.home_status.setFont(status_font)
         self.home_status.setAlignment(Qt.AlignCenter)
-        self.home_status.setGeometry(280, 176, 200, 15)
+        self.home_status.setGeometry(280, 176, 200, 18)
 
     def init_chart_ui(self):
         chart = QChart(); chart.legend().hide()
         highs, lows = self.weather_provider.get_highs_and_lows()
         start = QDateTime.currentDateTime()
-        high_series = QSplineSeries(); high_series.setPen(QPen(Qt.black, 5))
+        high_series = QSplineSeries(); high_series.setPen(QPen(Qt.black, 4))
         low_series  = QSplineSeries(); low_series.setPen(QPen(Qt.black, 2, Qt.DashLine))
         for i, val in enumerate(highs):
             dt = start.addDays(i)
@@ -142,7 +146,7 @@ class EInkDashboard(QWidget):
             dt = start.addDays(i)
             low_series.append(dt.toMSecsSinceEpoch(), val)
         chart.addSeries(high_series); chart.addSeries(low_series)
-        axis_font = QFont(); axis_font.setPointSize(14); axis_font.setBold(True)
+        axis_font = QFont(); axis_font.setPointSize(12); axis_font.setBold(True)
         axisX = QDateTimeAxis(); axisX.setFormat("ddd"); axisX.setTickCount(5)
         axisX.setGridLineVisible(False); axisX.setLabelsFont(axis_font)
         axisY = QValueAxis(); axisY.setRange(-10, 40)
@@ -164,7 +168,7 @@ class EInkDashboard(QWidget):
     def init_notes_ui(self):
         notes_text = self.notes_provider.get_notes_markdown()
         self.notes = QTextEdit(self)
-        notes_font = QFont(); notes_font.setPointSize(16)
+        notes_font = QFont(); notes_font.setPointSize(13)
         self.notes.setFont(notes_font)
         self.notes.setReadOnly(True)
         self.notes.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -176,14 +180,17 @@ class EInkDashboard(QWidget):
     def init_sysinfo_ui(self):
         info = self.system_info_provider.get_info()
         self.sysinfo_label = QLabel(info, self)
-        sysinfo_font = QFont(); sysinfo_font.setPointSize(12)
+        sysinfo_font = QFont(); sysinfo_font.setPointSize(8)
         self.sysinfo_label.setFont(sysinfo_font)
         self.sysinfo_label.setGeometry(10, 460, 400, 20)
 
 if __name__ == "__main__":
-    def_font = QFont("Roboto Mono")
     app = QApplication(sys.argv)
-    QApplication.setFont(def_font)
+    app.setStyleSheet("""
+    * {
+        font-family: "Bookerly", sans-serif;
+    }
+""")
     window = EInkDashboard()
     window.setAttribute(Qt.WA_DontShowOnScreen)
     window.show()
