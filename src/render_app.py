@@ -17,6 +17,7 @@ os.environ["QT_SCALE_FACTOR"] = "1"              # global scale factor = 1 (no s
 os.environ["QT_FONT_DPI"] = "96"                 # pretend every screen is 96 DPI :contentReference[oaicite:2]{index=2}
 
 PROVIDERS_WAITING_TIME = int(os.getenv("PROVIDERS_WAITING_TIME"))
+OUTPUT_FILE_NAME= os.getenv("OUTPUT_FILE_NAME")
 
 class EInkCalendar(QCalendarWidget):
     def __init__(self, parent=None):
@@ -200,5 +201,5 @@ if __name__ == "__main__":
     pixmap = QPixmap(window.size())
     pixmap.fill(Qt.white)
     window.render(pixmap)
-    pixmap.save("out/dashboard.png")
+    pixmap.save(OUTPUT_FILE_NAME)
     app.quit()
