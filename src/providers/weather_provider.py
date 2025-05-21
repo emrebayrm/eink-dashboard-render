@@ -11,8 +11,8 @@ PORT = 1883
 CURRENT_WEATHER_TOPIC = "weather/current"
 WEATHER_FORECAST_TOPIC = "weather/estimation"
 CLIENT_ID = "weather-provider-client"
-USERNAME = None    # set if broker requires auth
-PASSWORD = None
+USERNAME = "ex"    # set if broker requires auth
+PASSWORD = "ex"
 
 
 def weather_emoji(code: int) -> str:
@@ -100,6 +100,7 @@ class WeatherProvider:
         Connect to the broker and start the network loop in the background.
         """
         if not self._running:
+            self.client.username_pw_set(username=USERNAME, password=PASSWORD)
             self.client.connect(BROKER, PORT, keepalive=60)
             self.client.loop_start()
             self._running = True

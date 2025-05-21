@@ -116,7 +116,7 @@ class EInkDashboard(QWidget):
         self.clock_label.setAlignment(Qt.AlignCenter)
         self.clock_label.setGeometry(200, 1, 350, 160)
         self.date_label = QLabel(QDateTime.currentDateTime().toString("dddd dd/MM"), self)
-        date_font = QFont(); date_font.setPointSize(28); date_font.setBold(True)
+        date_font = QFont(); date_font.setPointSize(24); date_font.setBold(True)
         self.date_label.setFont(date_font)
         self.date_label.setAlignment(Qt.AlignCenter)
         self.date_label.setGeometry(250, 135, 200, 40)
@@ -181,7 +181,9 @@ class EInkDashboard(QWidget):
         self.sysinfo_label.setGeometry(10, 460, 400, 20)
 
 if __name__ == "__main__":
+    def_font = QFont("Roboto Mono")
     app = QApplication(sys.argv)
+    QApplication.setFont(def_font)
     window = EInkDashboard()
     window.setAttribute(Qt.WA_DontShowOnScreen)
     window.show()

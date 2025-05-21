@@ -3,7 +3,7 @@
 
 import paho.mqtt.client as mqtt
 
-BROKER = "homeassistant.local"
+BROKER = "localhost"
 PORT = 1883
 CURRENT_TEMPERATURE_TOPIC = "homeassistant/sensor/temperature/state"
 CURRENT_HUMIDITY_TOPIC = "homeassistant/sensor/humidity/state"

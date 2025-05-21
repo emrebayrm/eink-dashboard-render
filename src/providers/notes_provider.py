@@ -53,6 +53,6 @@ class NotesProvider:
             start = get_formatted_dt_from_event(ev, "start")
             end = get_formatted_dt_from_event(ev, "end")
 
-            events_return_text += f"-  {ev["summary"]} \n"
-            events_return_text += f"\n   {start.strftime("%-d %b")} / {end.strftime("%-d %b")} \n"
+            events_return_text += f"-  {ev['summary']} \n"
+            events_return_text += f"\n   {start.strftime('%-d %b')} / {end.strftime('%-d %b')} \n"
         return events_return_text

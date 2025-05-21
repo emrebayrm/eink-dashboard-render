@@ -18,6 +18,10 @@ RUN apt-get update \
       libegl1-mesa      \
       libgles2-mesa     \
       libfontconfig1    \
+      libglib2.0-0      \
+      libxkbcommon0     \
+      libgl1-mesa-glx   \
+      libdbus-1-3       \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
