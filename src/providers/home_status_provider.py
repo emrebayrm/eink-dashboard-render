@@ -2,14 +2,15 @@
 # homeassistant/sensor/humidity/state 45
 
 import paho.mqtt.client as mqtt
+import os
 
-BROKER = "localhost"
+BROKER = os.getenv("HOME_STATUS_MQTT_BROKER")
 PORT = 1883
 CURRENT_TEMPERATURE_TOPIC = "homeassistant/sensor/temperature/state"
 CURRENT_HUMIDITY_TOPIC = "homeassistant/sensor/humidity/state"
 CLIENT_ID = "homestatus-provider-client"
-USERNAME = "ex"    # set if broker requires auth
-PASSWORD = "ex"
+USERNAME = os.getenv("HOME_STATUS_MQTT_USERNAME")    # set if broker requires auth
+PASSWORD = os.getenv("HOME_STATUS_MQTT_PASSWORD")
 
 class HomeStatusProvider:
     def __init__(self):

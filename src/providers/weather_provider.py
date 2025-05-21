@@ -3,16 +3,16 @@
 Install with: pip install paho-mqtt
 """
 import paho.mqtt.client as mqtt
-import json
+import json, os
 
 # MQTT broker settings
-BROKER = "localhost"
+BROKER = os.getenv("WEATHER_MQTT_BROKER")
 PORT = 1883
 CURRENT_WEATHER_TOPIC = "weather/current"
 WEATHER_FORECAST_TOPIC = "weather/estimation"
 CLIENT_ID = "weather-provider-client"
-USERNAME = "ex"    # set if broker requires auth
-PASSWORD = "ex"
+USERNAME = os.getenv("WEATHER_MQTT_USERNAME")    # set if broker requires auth
+PASSWORD = os.getenv("WEATHER_MQTT_PASSWORD")
 
 
 def weather_emoji(code: int) -> str:

@@ -16,6 +16,8 @@ os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "0"    # restores Qt5 behavior :conten
 os.environ["QT_SCALE_FACTOR"] = "1"              # global scale factor = 1 (no scaling) :contentReference[oaicite:1]{index=1}
 os.environ["QT_FONT_DPI"] = "96"                 # pretend every screen is 96 DPI :contentReference[oaicite:2]{index=2}
 
+PROVIDERS_WAITING_TIME = int(os.getenv("PROVIDERS_WAITING_TIME"))
+
 class EInkCalendar(QCalendarWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -87,7 +89,7 @@ class EInkDashboard(QWidget):
         self.home_status_provider.start()
 
         # give some time to receieve weather homeassistant 
-        time.sleep(2)
+        time.sleep(PROVIDERS_WAITING_TIME)
         
         # Build UI
         self.init_weather_ui()
@@ -198,5 +200,5 @@ if __name__ == "__main__":
     pixmap = QPixmap(window.size())
     pixmap.fill(Qt.white)
     window.render(pixmap)
-    pixmap.save("dashboard.png")
+    pixmap.save("out/dashboard.png")
     app.quit()

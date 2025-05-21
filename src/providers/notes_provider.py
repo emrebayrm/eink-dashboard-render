@@ -2,6 +2,9 @@ from .events_provider import EventsProvider
 from datetime import datetime, timezone
 from typing import List, Dict
 
+import os
+
+MAX_ITEM_LIST_IN_NOTES = int(os.getenv("MAX_ITEM_LIST_IN_NOTES"))
 
 def get_formatted_dt_from_event(ev, key):
     not_parsed_key = ev.get(key, {})
@@ -48,7 +51,7 @@ class NotesProvider:
     def get_notes_markdown(self):
         events_return_text = "## Upcoming Events\n"
         events = self.event_provider.get_events()
-        first_5 = NotesProvider.get_first_n_upcoming_events(events)
+        first_5 = NotesProvider.get_first_n_upcoming_events(events, MAX_ITEM_LIST_IN_NOTES)
         for ev in first_5:
             start = get_formatted_dt_from_event(ev, "start")
             end = get_formatted_dt_from_event(ev, "end")
