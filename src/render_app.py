@@ -110,13 +110,13 @@ class EInkDashboard(QWidget):
         self.weather_icon = QLabel(icon, self)
         font = QFont(); font.setPointSize(90); font.setBold(True)
         self.weather_icon.setFont(font)
-        self.weather_icon.setGeometry(5, 1, 175, 160)
+        self.weather_icon.setGeometry(5, -50, 175, 160)
         info_text = f"{temp}  |  ↑  {sunrise}  |  ↓  {sunset}"
         self.sun_info = QLabel(info_text, self)
-        info_font = QFont(); info_font.setPointSize(12); info_font.setBold(True)
+        info_font = QFont(); info_font.setPointSize(11); info_font.setBold(True)
         self.sun_info.setFont(info_font)
         self.sun_info.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        self.sun_info.setGeometry(10, 170, 250, 20)
+        self.sun_info.setGeometry(10, 170, 240, 20)
 
     def init_clock_ui(self):
         qt_timezone = QTimeZone(timezone_str.encode())  # QTimeZone takes bytes
@@ -124,7 +124,7 @@ class EInkDashboard(QWidget):
         clock_font = QFont(); clock_font.setPointSize(85); clock_font.setBold(True)
         self.clock_label.setFont(clock_font)
         self.clock_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        self.clock_label.setGeometry(190, 1, 300, 160)
+        self.clock_label.setGeometry(190, 1, 320, 160)
         self.date_label = QLabel(QDateTime.currentDateTime(qt_timezone).toString("dddd dd/MM"), self)
         date_font = QFont(); date_font.setPointSize(14); date_font.setBold(True)
         self.date_label.setFont(date_font)
