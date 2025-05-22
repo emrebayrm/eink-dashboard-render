@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from PySide6.QtWidgets import QWidget, QLabel, QTextEdit, QCalendarWidget, QApplication, QFrame
 from PySide6.QtGui import QFont, QPainter, QPixmap, QPen, QTextCharFormat, QPolygon
-from PySide6.QtCore import Qt, QDateTime, QDate
+from PySide6.QtCore import Qt, QDateTime, QDate, QTimeZone
 from PySide6.QtCharts import QChart, QChartView, QSplineSeries, QValueAxis, QDateTimeAxis
 import sys, time, os
 
@@ -18,6 +18,8 @@ os.environ["QT_FONT_DPI"] = "96"                 # pretend every screen is 96 DP
 
 PROVIDERS_WAITING_TIME = int(os.getenv("PROVIDERS_WAITING_TIME"))
 OUTPUT_FILE_NAME= os.getenv("OUTPUT_FILE_NAME")
+
+timezone_str = "Europe/Amsterdam"
 
 class EInkCalendar(QCalendarWidget):
     def __init__(self, parent=None):
@@ -106,24 +108,25 @@ class EInkDashboard(QWidget):
         temp = self.weather_provider.get_current_temperature()
         sunrise, sunset = self.weather_provider.get_sun_times()
         self.weather_icon = QLabel(icon, self)
-        font = QFont(); font.setPointSize(130); font.setBold(True)
+        font = QFont(); font.setPointSize(90); font.setBold(True)
         self.weather_icon.setFont(font)
         self.weather_icon.setGeometry(5, 1, 175, 160)
         info_text = f"{temp}  |  ↑  {sunrise}  |  ↓  {sunset}"
         self.sun_info = QLabel(info_text, self)
-        info_font = QFont(); info_font.setPointSize(14); info_font.setBold(True)
+        info_font = QFont(); info_font.setPointSize(12); info_font.setBold(True)
         self.sun_info.setFont(info_font)
         self.sun_info.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        self.sun_info.setGeometry(10, 170, 300, 20)
+        self.sun_info.setGeometry(10, 170, 250, 20)
 
     def init_clock_ui(self):
-        self.clock_label = QLabel(QDateTime.currentDateTime().toString("HH:mm"), self)
-        clock_font = QFont(); clock_font.setPointSize(100); clock_font.setBold(True)
+        qt_timezone = QTimeZone(timezone_str.encode())  # QTimeZone takes bytes
+        self.clock_label = QLabel(QDateTime.currentDateTime(qt_timezone).toString("HH:mm"), self)
+        clock_font = QFont(); clock_font.setPointSize(85); clock_font.setBold(True)
         self.clock_label.setFont(clock_font)
         self.clock_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        self.clock_label.setGeometry(190, 1, 350, 160)
-        self.date_label = QLabel(QDateTime.currentDateTime().toString("dddd dd/MM"), self)
-        date_font = QFont(); date_font.setPointSize(18); date_font.setBold(True)
+        self.clock_label.setGeometry(190, 1, 300, 160)
+        self.date_label = QLabel(QDateTime.currentDateTime(qt_timezone).toString("dddd dd/MM"), self)
+        date_font = QFont(); date_font.setPointSize(14); date_font.setBold(True)
         self.date_label.setFont(date_font)
         self.date_label.setAlignment(Qt.AlignCenter)
         self.date_label.setGeometry(250, 135, 220, 30)
@@ -131,7 +134,7 @@ class EInkDashboard(QWidget):
     def init_status_ui(self):
         status_text = self.home_status_provider.get_status()
         self.home_status = QLabel(status_text, self)
-        status_font = QFont(); status_font.setPointSize(13); status_font.setBold(True)
+        status_font = QFont(); status_font.setPointSize(10); status_font.setBold(True)
         self.home_status.setFont(status_font)
         self.home_status.setAlignment(Qt.AlignCenter)
         self.home_status.setGeometry(280, 176, 200, 18)
@@ -139,7 +142,8 @@ class EInkDashboard(QWidget):
     def init_chart_ui(self):
         chart = QChart(); chart.legend().hide()
         highs, lows = self.weather_provider.get_highs_and_lows()
-        start = QDateTime.currentDateTime()
+        qt_timezone = QTimeZone(timezone_str.encode())  # QTimeZone takes bytes
+        start = QDateTime.currentDateTime(qt_timezone)
         high_series = QSplineSeries(); high_series.setPen(QPen(Qt.black, 4))
         low_series  = QSplineSeries(); low_series.setPen(QPen(Qt.black, 2, Qt.DashLine))
         for i, val in enumerate(highs):
@@ -171,7 +175,7 @@ class EInkDashboard(QWidget):
     def init_notes_ui(self):
         notes_text = self.notes_provider.get_notes_markdown()
         self.notes = QTextEdit(self)
-        notes_font = QFont(); notes_font.setPointSize(13)
+        notes_font = QFont(); notes_font.setPointSize(10)
         self.notes.setFont(notes_font)
         self.notes.setReadOnly(True)
         self.notes.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
