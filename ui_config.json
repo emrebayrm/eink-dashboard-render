@@ -1,0 +1,107 @@
+{
+  "global_settings": {
+    "timezone": "Europe/Amsterdam",
+    "font_family": "Bookerly, sans-serif",
+    "main_window_width": 800,
+    "main_window_height": 480,
+    "default_background_color": "white",
+    "default_text_color": "black"
+  },
+  "eink_calendar": {
+    "font_size": 12,
+    "font_bold": true,
+    "header_font_size": 13,
+    "header_font_bold": true,
+    "background_color": "white",
+    "text_color": "black",
+    "grid_visible": false,
+    "vertical_header_format_none": true,
+    "navigation_bar_visible": false,
+    "current_date_fill_color": "black",
+    "current_date_text_color": "white",
+    "event_indicator_line_color": "black",
+    "event_indicator_line_width": 2
+  },
+  "dashboard_elements": {
+    "weather_icon": {
+      "font_size": 90,
+      "font_bold": true,
+      "geometry": [5, -50, 175, 160]
+    },
+    "sun_info": {
+      "font_size": 11,
+      "font_bold": true,
+      "alignment_h": "AlignLeft",
+      "alignment_v": "AlignVCenter",
+      "geometry": [10, 170, 240, 20]
+    },
+    "clock_label": {
+      "font_size": 85,
+      "font_bold": true,
+      "alignment_h": "AlignLeft",
+      "alignment_v": "AlignVCenter",
+      "geometry": [190, 1, 320, 160],
+      "time_format": "HH:mm"
+    },
+    "date_label": {
+      "font_size": 14,
+      "font_bold": true,
+      "alignment_h": "AlignCenter",
+      "alignment_v": "AlignVCenter",
+      "geometry": [250, 135, 220, 30],
+      "date_format": "dddd dd/MM"
+    },
+    "home_status": {
+      "font_size": 10,
+      "font_bold": true,
+      "alignment_h": "AlignCenter",
+      "alignment_v": "AlignVCenter",
+      "geometry": [280, 176, 200, 18]
+    },
+    "chart_view": {
+      "geometry": [-20, 195, 500, 285],
+      "antialiasing": false,
+      "high_series_pen": {
+        "color": "black",
+        "width": 4,
+        "style": "SolidLine"
+      },
+      "low_series_pen": {
+        "color": "black",
+        "width": 2,
+        "style": "DashLine"
+      },
+      "axisX": {
+        "format": "ddd",
+        "tick_count": 5,
+        "grid_line_visible": false,
+        "labels_font_size": 12,
+        "labels_font_bold": true
+      },
+      "axisY": {
+        "range_min": -10,
+        "range_max": 40,
+        "label_format": "%d°C",
+        "grid_line_visible": false,
+        "labels_font_size": 12,
+        "labels_font_bold": true
+      }
+    },
+    "calendar_widget_instance": {
+      "geometry": [450, 205, 350, 280]
+    },
+    "notes_text_edit": {
+      "font_size": 10,
+      "font_bold": false,
+      "geometry": [550, 5, 240, 190],
+      "vertical_scrollbar_policy": "ScrollBarAlwaysOff",
+      "horizontal_scrollbar_policy": "ScrollBarAlwaysOff",
+      "frame_shape": "NoFrame"
+    },
+    "sysinfo_label": {
+      "font_size": 8,
+      "font_bold": false,
+      "geometry": [10, 460, 400, 20]
+    }
+  }
+}
