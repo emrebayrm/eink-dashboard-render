@@ -22,6 +22,7 @@ RUN apt-get update \
       libxkbcommon0     \
       libgl1-mesa-glx   \
       libdbus-1-3       \
+      fonts-noto-color-emoji \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

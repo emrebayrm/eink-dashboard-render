@@ -314,9 +314,6 @@ class EInkDashboard(QWidget):
         # Add more properties like background color if needed
 
     def init_weather_ui(self):
-        cfg_icon = get_config_value(['dashboard_elements', 'weather_icon'])
-        cfg_sun = get_config_value(['dashboard_elements', 'sun_info'])
-
         icon_text = self.weather_provider.get_weather_icon()
         temp = self.weather_provider.get_current_temperature()
         sunrise, sunset = self.weather_provider.get_sun_times()
