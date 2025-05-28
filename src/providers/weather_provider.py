@@ -76,13 +76,14 @@ class WeatherProvider:
     
     def _parse_current_weather(self, payload):
         """
-        Example Data: {"temperature":15.6,"windspeed":13.0,"winddirection":30.0,"time":"2025-05-19T21:30"}
+        Example Data: {"temperature":15.6,"windspeed":13.0,"winddirection":30.0,"time":"2025-05-19T21:30", "weathercode": 0}
         """
         # Parse the JSON
         data = json.loads(payload)
 
         # Extract values
         self._current_weather = data['temperature']
+        self._weather_code = weather_emoji(data["weathercode"])
 
     def _parse_forecast_weather(self, payload):
         """
@@ -92,8 +93,6 @@ class WeatherProvider:
 
         self._highs = data["temperature_2m_max"]
         self._lows = data["temperature_2m_min"]
-        self._weather_code = weather_emoji(data["weathercode"][0])
-
 
     def start(self):
         """
