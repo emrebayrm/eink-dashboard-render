@@ -193,7 +193,7 @@ class EInkCalendar(QCalendarWidget):
         self.setup_calendar_style()
         self.event_list = []
 
-    def set_events(self, events):
+    def set_events(self, events):""
         self.event_list = [QDate(e.year, e.month, e.day) for e in events]
         self.updateCells() # Refresh cells to show new events
 
@@ -321,7 +321,7 @@ class EInkDashboard(QWidget):
         self.weather_icon = QLabel(icon_text, self)
         self._setup_label(self.weather_icon, 'weather_icon')
         
-        info_text = f"{temp}  |  ↑  {sunrise}  |  ↓  {sunset}"
+        info_text = f"{temp}"
         self.sun_info = QLabel(info_text, self)
         self._setup_label(self.sun_info, 'sun_info')
 
