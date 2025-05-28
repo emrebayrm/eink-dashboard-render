@@ -193,7 +193,7 @@ class EInkCalendar(QCalendarWidget):
         self.setup_calendar_style()
         self.event_list = []
 
-    def set_events(self, events):""
+    def set_events(self, events):
         self.event_list = [QDate(e.year, e.month, e.day) for e in events]
         self.updateCells() # Refresh cells to show new events
 
