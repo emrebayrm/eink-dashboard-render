@@ -100,10 +100,14 @@ class WeatherProvider:
         """
         if not self._running:
             self.client.username_pw_set(username=USERNAME, password=PASSWORD)
-            self.client.connect(BROKER, PORT, keepalive=60)
-            self.client.loop_start()
-            self._running = True
-            print("MQTT client loop started.")
+            try:
+                self.client.connect(BROKER, PORT, keepalive=60)
+                self.client.loop_start()
+                self._running = True
+                print("MQTT client loop started.")
+            except Exception as e:
+                print(f"Error connecting to MQTT broker: {e}")
+                return
 
     def stop(self):
         """
